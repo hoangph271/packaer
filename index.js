@@ -6,7 +6,8 @@ const PATHS = [
   '/Users/garand/useCode/covid4-frontend/frontend2.0',
   '/Users/garand/useCode/covid4-frontend/frontend-activation-page',
   '/Users/garand/useCode/covid4-frontend/frontend-meeting-room',
-  '/Users/garand/useCode/covid4-frontend/frontend-register-photos'
+  '/Users/garand/useCode/covid4-frontend/frontend-register-photos',
+  '/Users/garand/useCode/covid4-frontend/amlos-start-page'
 ]
 const xlsxColumns = [
   {

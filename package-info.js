@@ -22,7 +22,9 @@ exports.packageInfo = async (packageName, targetVersion) => {
     name: package.name,
     version: package.version,
     description: package.description,
-    license: package.license,
+    license: typeof package.license === 'string'
+      ? package.license
+      : package.license.type,
     homepage: package.homepage,
     author: package.author?.name ??
       package.maintainers?.map((maintainer) => maintainer.name).join(', ')
