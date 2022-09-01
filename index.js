@@ -68,8 +68,6 @@ async function run() {
 
   xlsx(jsonSheets, {
     fileName: 'All_OpenSource_Docks_FE',
-    // extraLength: 3,
-    // Style options from https://github.com/SheetJS/sheetjs#writing-options
     writeOptions: {}
   })
 }
