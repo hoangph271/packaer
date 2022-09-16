@@ -1,5 +1,4 @@
 const { packageInfo } = require('./package-info')
-const fs = require('fs-extra')
 const path = require('path')
 
 const PATHS = [
@@ -27,14 +26,12 @@ const xlsxColumns = [
   { label: 'Copyright', value: 'N/A' }
 ]
 
-async function run() {
+async function dependencyToXlsx() {
   const { default: xlsx } = await import('json-as-xlsx')
   const jsonSheets = []
 
   for (const PATH of PATHS) {
-    const packageJsonPath = path.join(PATH, 'package.json')
-    const packageJsonContent = await fs.readFile(packageJsonPath, 'utf8')
-    const { dependencies, devDependencies } = JSON.parse(packageJsonContent)
+    const { dependencies, devDependencies } = await exportDependencies(PATH)
 
     const packageEntries = [
       ...Object.entries(dependencies),
@@ -73,4 +70,4 @@ async function run() {
   })
 }
 
-run()
+dependencyToXlsx()
