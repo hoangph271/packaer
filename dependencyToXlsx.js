@@ -1,6 +1,6 @@
 const path = require('path')
 const { packageInfo } = require('./utils/package-info')
-const { exportDependencies } = require('./utils/utils')
+const { exportDependencies, writeXlsx } = require('./utils/utils')
 
 const PATHS = [
   '/Users/garand/useCode/covid4-frontend/frontend2.0',
@@ -9,7 +9,7 @@ const PATHS = [
   '/Users/garand/useCode/covid4-frontend/frontend-register-photos',
   '/Users/garand/useCode/covid4-frontend/amlos-start-page'
 ]
-const xlsxColumns = [
+const XLSX_COLUMNS = [
   {
     label: 'Name',
     value: row => ({
@@ -28,11 +28,11 @@ const xlsxColumns = [
 ]
 
 module.exports.dependencyToXlsx = async () => {
-  const { default: xlsx } = await import('json-as-xlsx')
   const jsonSheets = []
 
   for (const PATH of PATHS) {
-    const { dependencies, devDependencies } = await exportDependencies(PATH)
+    const packageJsonPath = path.join(PATH, 'package.json')
+    const { dependencies, devDependencies } = await exportDependencies(packageJsonPath)
 
     const packageEntries = [
       ...Object.entries(dependencies),
@@ -60,13 +60,10 @@ module.exports.dependencyToXlsx = async () => {
 
     jsonSheets.push({
       sheet,
-      columns: xlsxColumns,
+      columns: XLSX_COLUMNS,
       content
     })
   }
 
-  xlsx(jsonSheets, {
-    fileName: 'All_OpenSource_Docks_FE',
-    writeOptions: {}
-  })
+  writeXlsx(jsonSheets, 'All_OpenSource_Docks_FE')
 }

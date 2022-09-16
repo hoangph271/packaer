@@ -3,8 +3,43 @@ exports.packageInfo = async (packageName, targetVersion) => {
   const { satisfies } = await import('compare-versions')
   const { default: registryUrl } = await import('registry-url')
 
+  let copyright = ''
   const url = `${registryUrl()}${packageName.toLowerCase()}`
   const fromPackage = JSON.parse((await got(url)).body)
+  const githubUrl = fromPackage.repository?.url.replace('git+', '')
+
+  if (githubUrl) {
+    const branchNames = ['main', 'master', 'develop']
+
+    while (true) {
+      if (branchNames.length === 0) break
+
+      const branchName = branchNames.pop()
+      const readmePrefixUrl = githubUrl
+        .replace('.git', '')
+        .replace('https://github.com/', 'https://raw.githubusercontent.com/')
+
+      const licenseFileNames = ['LICENSE', 'LICENSE.txt', 'LICENSE.md']
+
+      for (const licenseFileName of licenseFileNames) {
+        const readmeUrl = `${readmePrefixUrl}/${branchName}/${licenseFileName}`
+
+        try {
+          const text = (await got(readmeUrl)).body
+          const lines = text.split('\n')
+          copyright = lines.find(line => line.trim().startsWith('Copyright ')) ?? ''
+
+          if (copyright) {
+            break
+          }
+        } catch (_) { }
+      }
+    }
+
+    if (!copyright) {
+      console.info(`NO Copyright found: ${githubUrl}`)
+    }
+  }
 
   const version = Object.keys(fromPackage.versions)
     .find(version => satisfies(version, targetVersion))
@@ -19,6 +54,7 @@ exports.packageInfo = async (packageName, targetVersion) => {
 
   return {
     url: `https://www.npmjs.com/package/${package.name}`,
+    copyright,
     name: package.name,
     version: package.version,
     description: package.description,
