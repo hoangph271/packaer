@@ -1,3 +1,5 @@
+const blacklistedRepos = new Set()
+
 exports.packageInfo = async (packageName, targetVersion) => {
   const { default: got } = await import('got')
   const { satisfies } = await import('compare-versions')
@@ -6,9 +8,12 @@ exports.packageInfo = async (packageName, targetVersion) => {
   let copyright = ''
   const url = `${registryUrl()}${packageName.toLowerCase()}`
   const fromPackage = JSON.parse((await got(url)).body)
-  const githubUrl = fromPackage.repository?.url.replace('git+', '')
+  const githubUrl = fromPackage.repository?.url
+    .replace('git+', '')
+    .replace('ssh://git@', 'https://')
+    .replace('git://', 'https://')
 
-  if (githubUrl) {
+  if (githubUrl && !blacklistedRepos.has(githubUrl)) {
     const branchNames = ['main', 'master', 'develop']
 
     while (true) {
@@ -19,7 +24,7 @@ exports.packageInfo = async (packageName, targetVersion) => {
         .replace('.git', '')
         .replace('https://github.com/', 'https://raw.githubusercontent.com/')
 
-      const licenseFileNames = ['LICENSE', 'LICENSE.txt', 'LICENSE.md']
+      const licenseFileNames = ['LICENSE', 'LICENSE.txt', 'LICENSE.md', 'license']
 
       for (const licenseFileName of licenseFileNames) {
         const readmeUrl = `${readmePrefixUrl}/${branchName}/${licenseFileName}`
@@ -37,6 +42,7 @@ exports.packageInfo = async (packageName, targetVersion) => {
     }
 
     if (!copyright) {
+      blacklistedRepos.add(githubUrl)
       console.info(`NO Copyright found: ${githubUrl}`)
     }
   }

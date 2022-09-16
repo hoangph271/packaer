@@ -24,7 +24,7 @@ const XLSX_COLUMNS = [
   { label: 'Version', value: 'version' },
   { label: 'License', value: 'license' },
   { label: 'Author', value: 'author' },
-  { label: 'Copyright', value: 'N/A' }
+  { label: 'Copyright', value: 'copyright' }
 ]
 
 module.exports.dependencyToXlsx = async () => {
@@ -40,7 +40,7 @@ module.exports.dependencyToXlsx = async () => {
     ]
 
     const contentPromises = packageEntries.map(async ([packageName, packageVersion]) => {
-      const { name, url, version, license, author } = await packageInfo(packageName, packageVersion)
+      const { name, url, version, license, author, copyright } = await packageInfo(packageName, packageVersion)
         .catch(() => {
           console.info(packageName, packageVersion)
           process.exit(1)
@@ -51,7 +51,8 @@ module.exports.dependencyToXlsx = async () => {
         url,
         version,
         license,
-        author
+        author,
+        copyright
       }
     })
 
