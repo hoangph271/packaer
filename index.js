@@ -1,5 +1,6 @@
-const { packageInfo } = require('./package-info')
 const path = require('path')
+const { packageInfo } = require('./package-info')
+const { exportDependencies } = require('./utils/utils')
 
 const PATHS = [
   '/Users/garand/useCode/covid4-frontend/frontend2.0',
