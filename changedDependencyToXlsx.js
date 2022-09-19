@@ -1,8 +1,10 @@
 const { exportDependencies, writeXlsx } = require('./utils/utils')
 const { packageInfo } = require('./utils/package-info')
 
-const OLD_PATH = '/Users/garand/Desktop/old_package.json'
-const NEW_PATH = '/Users/garand/Desktop/new_package.json'
+// TODO: Load from .env
+const OLD_PATH = ''
+const NEW_PATH = ''
+
 const XLSX_COLUMNS = [
   {
     label: 'Name',

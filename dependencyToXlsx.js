@@ -2,13 +2,8 @@ const path = require('path')
 const { packageInfo } = require('./utils/package-info')
 const { exportDependencies, writeXlsx } = require('./utils/utils')
 
-const PATHS = [
-  '/Users/garand/useCode/covid4-frontend/frontend2.0',
-  '/Users/garand/useCode/covid4-frontend/frontend-activation-page',
-  '/Users/garand/useCode/covid4-frontend/frontend-meeting-room',
-  '/Users/garand/useCode/covid4-frontend/frontend-register-photos',
-  '/Users/garand/useCode/covid4-frontend/amlos-start-page'
-]
+// TODO: Load from .env
+const PATHS = []
 const XLSX_COLUMNS = [
   {
     label: 'Name',
